@@ -1,4 +1,4 @@
-- name: "start mapred job history server"
+- name: "start mapred job history server for Hadoop older than 3.0"
   shell: "source ~/.bash_profile && ./mr-jobhistory-daemon.sh start historyserver"
   args:
     executable: /bin/bash
@@ -6,3 +6,15 @@
   register: historyserver_stat
   changed_when: "'starting historyserver' in historyserver_stat.stdout"
   failed_when: "historyserver_stat.rc != 0 and 'historyserver running as process' not in historyserver_stat.stdout"
+  when: hadoop_version is version('3.0.0','<')
+
+- name: "start mapred job history server for Hadoop newer than 3.0"
+  shell: "source ~/.bash_profile && ./mapred --daemon start historyserver"
+  args:
+    executable: /bin/bash
+    chdir: "{{ hadoop_home }}/bin"
+  register: historyserver_stat
+  changed_when: "historyserver_stat.rc == 0"
+  failed_when: "historyserver_stat.rc != 0 and 'historyserver is running as process' not in historyserver_stat.stderr"
+  when: hadoop_version is version('3.0.0','>=')
+

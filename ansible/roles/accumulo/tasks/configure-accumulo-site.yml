@@ -10,4 +10,15 @@
       </property>
     state: present
     insertbefore: </configuration>
+  when: accumulo_version is version('2.0.0','<')
+  tags: [accumulo-site-xml]
+
+- name: "configure accumulo.properties for datawave vfs context"
+  blockinfile:
+    dest: "{{ accumulo_home }}/conf/accumulo.properties"
+    content: |
+      ## Set up VFS context classpath for Datawave
+      general.vfs.context.classpath.{{ dw_accumulo_vfs_context_name }}={{ dw_accumulo_vfs_context_config }}
+    state: present
+  when: accumulo_version is version('2.0.0','>=')
   tags: [accumulo-site-xml]

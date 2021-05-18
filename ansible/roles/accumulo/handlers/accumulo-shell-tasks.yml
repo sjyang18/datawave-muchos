@@ -22,5 +22,5 @@
   command: "{{ accumulo_home }}/bin/accumulo shell -u root -p {{ accumulo_password }} -f {{ tmp_script.path }}"
   register: exec_accumulo_shell
   failed_when: exec_accumulo_shell.rc != 0
-    and 'client.TableExistsException' not in exec_accumulo_shell.stdout
-    and 'client.NamespaceExistsException' not in exec_accumulo_shell.stdout
+    and 'client.TableExistsException' not in exec_accumulo_shell.stderr
+    and 'client.NamespaceExistsException' not in exec_accumulo_shell.stderr

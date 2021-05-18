@@ -1,20 +1,31 @@
 # Bounce Accumulo and execute configured shell tasks on start
-- hosts: accumulomaster
+- hosts: accumulomaster[0]
   roles:
     - accumulo
   tasks:
-    - name: "stop accumulo"
+    - name: "stop accumulo 1.x"
       shell: "{{ accumulo_home }}/bin/stop-all.sh"
       register: stop_result
       changed_when: "'Stopping' in stop_result.stdout"
+      when: accumulo_version is version('2.0.0','<')
       tags: [stop-accumulo]
 
-    - name: "start accumulo"
+    - name: "start accumulo 1.x"
       shell: "{{ accumulo_home }}/bin/start-all.sh"
       register: start_result
       changed_when: "'Starting' in start_result.stdout"
       notify: "accumulo shell tasks"
+      when: accumulo_version is version('2.0.0','<')
       tags: [start-accumulo]
+    
+    - name: "restart accumulo 2.x"
+      shell: "{{ accumulo_home }}/bin/accumulo-cluster restart"
+      register: start_result
+      changed_when: "'Starting' in start_result.stdout"
+      notify: "accumulo shell tasks"
+      when: accumulo_version is version('2.0.0','>=')
+      tags: [start-accumulo]
+  
   handlers:
     - include: roles/accumulo/handlers/accumulo-shell-tasks.yml
       when: dw_accumulo_skip_shell_tasks == False

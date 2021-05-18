@@ -1,5 +1,5 @@
 - name: "load job cache"
-  shell: "source ~/.bash_profile && nohup ./load-job-cache.sh -allforce &"
+  shell: "source ~/.bash_profile && { ./check-job-cache.sh || ./load-job-cache.sh -allforce; }"
   args:
     executable: /bin/bash
     chdir: "{{ dw_ingest_home }}/bin/ingest"

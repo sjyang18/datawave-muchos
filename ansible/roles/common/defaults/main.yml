@@ -20,7 +20,7 @@ dw_repo: "https://github.com/NationalSecurityAgency/datawave.git"
 dw_checkout_version: "2.6.41"
 dw_build_property_overrides_dir: "{{ user_home }}/.m2/datawave/properties"
 dw_m2_repo_dir: "{{ user_home }}/.m2/repository"
-dw_build_command: "mvn -P{{ dw_build_profile }} -Dmaven.repo.local={{ dw_m2_repo_dir }} -Ddeploy -Dtar -Ddist -DskipTests clean install"
+dw_build_command: "mvn -P{{ dw_build_profile }} -Dmaven.repo.local={{ dw_m2_repo_dir }} -Ddeploy -Dtar -Ddist -DskipTests clean package"
 
 # Accumulo
 
